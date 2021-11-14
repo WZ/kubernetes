@@ -226,7 +226,10 @@ func getMatchingGlobalIP(addrs []net.Addr, family AddressFamily) (net.IP, error)
 				return nil, err
 			}
 			if memberOf(ip, family) {
-				if ip.IsGlobalUnicast() {
+				if ip.IsLinkLocalUnicast() {
+					klog.V(4).Infof("IP found %v", ip)
+					return ip, nil
+				} else if ip.IsGlobalUnicast() {
 					klog.V(4).Infof("IP found %v", ip)
 					return ip, nil
 				} else {
@@ -315,7 +318,7 @@ func chooseIPFromHostInterfaces(nw networkInterfacer, addressFamilies AddressFam
 					continue
 				}
 				// TODO: Decide if should open up to allow IPv6 LLAs in future.
-				if !ip.IsGlobalUnicast() {
+				if !ip.IsLinkLocalUnicast() && !ip.IsGlobalUnicast() {
 					klog.V(4).Infof("Skipping: non-global address %q on interface %q.", ip, intf.Name)
 					continue
 				}

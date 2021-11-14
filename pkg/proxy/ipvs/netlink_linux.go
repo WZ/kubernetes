@@ -183,7 +183,7 @@ func (h *netlinkHandle) GetLocalAddresses(dev, filterDev string) (sets.String, e
 			continue
 		}
 		if h.isIPv6 {
-			if route.Dst.IP.To4() == nil && !route.Dst.IP.IsLinkLocalUnicast() {
+			if route.Dst.IP.To4() == nil {
 				res.Insert(route.Dst.IP.String())
 			}
 		} else if route.Src != nil {

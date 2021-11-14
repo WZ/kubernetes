@@ -133,6 +133,9 @@ func VerifyAPIServerBindAddress(address string) error {
 	if ip.IsLoopback() {
 		return nil
 	}
+	if ip.IsLinkLocalUnicast() {
+		return nil
+	}
 	if !ip.IsGlobalUnicast() {
 		return errors.Errorf("cannot use %q as the bind address for the API Server", address)
 	}
